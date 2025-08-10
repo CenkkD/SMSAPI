@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmsWebAPI", "SMSAPI\SmsWebAPI.csproj", "{B85B4F5C-D491-4098-A658-C4D44AE8B891}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{86344259-D557-453B-979A-2412A3162278}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{79C9CE34-6774-4168-93D8-7F38EEF572CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMSAPI.Domain", "Core\SMSAPI.Domain\SMSAPI.Domain.csproj", "{03E67CF0-A205-44A4-963B-2A5C1FFE49E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMSAPI.Application", "Core\SMSAPIApplication\SMSAPI.Application.csproj", "{3D0E6F35-CB63-4950-BA07-CAD6644A2880}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMSAPI.Infrastructure", "Infrastructure\SMSAPI.Infrastructure\SMSAPI.Infrastructure.csproj", "{FD495E4C-F834-4574-8506-35C262FF75E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMSAPI.Persistence", "Infrastructure\SMSAPI.Persistence\SMSAPI.Persistence.csproj", "{32557BB0-7981-4C62-96C8-01ED1E064B2E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B85B4F5C-D491-4098-A658-C4D44AE8B891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B85B4F5C-D491-4098-A658-C4D44AE8B891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B85B4F5C-D491-4098-A658-C4D44AE8B891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B85B4F5C-D491-4098-A658-C4D44AE8B891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03E67CF0-A205-44A4-963B-2A5C1FFE49E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E67CF0-A205-44A4-963B-2A5C1FFE49E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03E67CF0-A205-44A4-963B-2A5C1FFE49E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E67CF0-A205-44A4-963B-2A5C1FFE49E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D0E6F35-CB63-4950-BA07-CAD6644A2880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D0E6F35-CB63-4950-BA07-CAD6644A2880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D0E6F35-CB63-4950-BA07-CAD6644A2880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D0E6F35-CB63-4950-BA07-CAD6644A2880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD495E4C-F834-4574-8506-35C262FF75E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD495E4C-F834-4574-8506-35C262FF75E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD495E4C-F834-4574-8506-35C262FF75E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD495E4C-F834-4574-8506-35C262FF75E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32557BB0-7981-4C62-96C8-01ED1E064B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32557BB0-7981-4C62-96C8-01ED1E064B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32557BB0-7981-4C62-96C8-01ED1E064B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32557BB0-7981-4C62-96C8-01ED1E064B2E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{03E67CF0-A205-44A4-963B-2A5C1FFE49E2} = {86344259-D557-453B-979A-2412A3162278}
+		{3D0E6F35-CB63-4950-BA07-CAD6644A2880} = {86344259-D557-453B-979A-2412A3162278}
+		{FD495E4C-F834-4574-8506-35C262FF75E9} = {79C9CE34-6774-4168-93D8-7F38EEF572CD}
+		{32557BB0-7981-4C62-96C8-01ED1E064B2E} = {79C9CE34-6774-4168-93D8-7F38EEF572CD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6FF32F5F-109A-4659-8B44-1F89A44CE14D}
+	EndGlobalSection
+EndGlobal
