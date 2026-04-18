@@ -20,7 +20,7 @@ namespace SmsWebAPI.SeedConfig
 				new Role
 				{
 					Id = "78udf5dc-d9s5-h581-6u5g-16k3dt3sd762",
-					Name = "Stock Manager",
+					Name = "StockManager",
 					NormalizedName = "STOCKMANAGER",
 					Description = "Stock Manager role for users"
 

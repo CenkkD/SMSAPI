@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SMSAPI.Application.Dtos;
 using SMSAPI.Domain.Entities.Common;
 using System.Linq.Expressions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using SMSAPI.Application.Dtos;
 
 namespace SMSAPI.Application.Repositories
 {
@@ -11,6 +9,9 @@ namespace SMSAPI.Application.Repositories
 	{
 		//Read OP
 		IQueryable<T> GetAll();
+		Task<List<T>> GetAllAsync();
+		Task<PagedResult<T>> GetPagedAsync(int pageNumber, int pageSize);
+		Task<PagedResult<T>> GetPagedAsync(Expression<Func<T, bool>> filter, int pageNumber, int pageSize);
 		IQueryable<T> GetWhere(Expression<Func<T, bool>> entity);
 		Task<T> GetSingleAsync(Expression<Func<T, bool>> entity);
 		Task<T> GetByIdAsync(string id);

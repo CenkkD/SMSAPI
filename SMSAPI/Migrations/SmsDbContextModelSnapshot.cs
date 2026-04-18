@@ -10,14 +10,14 @@ using SmsWebAPI.Data;
 
 namespace SmsWebAPI.Migrations
 {
-	[DbContext(typeof(SmsDbContext))]
+    [DbContext(typeof(SmsDbContext))]
     partial class SmsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -107,18 +107,6 @@ namespace SmsWebAPI.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "0f9fe22a-0347-4fb9-9891-fb801308849b",
-                            RoleId = "43mtp8kr-b7a3-d725-3c8g-75s8ba8uf529"
-                        },
-                        new
-                        {
-                            UserId = "3cf4fbe9-1a45-4a9a-9427-f717d574d5ac",
-                            RoleId = "639de03f-7876-4fff-96ec-37f8bd3bf180"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -140,7 +128,7 @@ namespace SmsWebAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SMSAPI.Entities.Role", b =>
+            modelBuilder.Entity("SmsWebAPI.Entities.Role", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -181,7 +169,7 @@ namespace SmsWebAPI.Migrations
                         {
                             Id = "78udf5dc-d9s5-h581-6u5g-16k3dt3sd762",
                             Description = "Stock Manager role for users",
-                            Name = "Stock Manager",
+                            Name = "StockManager",
                             NormalizedName = "STOCKMANAGER"
                         },
                         new
@@ -193,7 +181,7 @@ namespace SmsWebAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SMSAPI.Entities.User", b =>
+            modelBuilder.Entity("SmsWebAPI.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -266,7 +254,7 @@ namespace SmsWebAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("SMSAPI.Entities.Role", null)
+                    b.HasOne("SmsWebAPI.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -275,7 +263,7 @@ namespace SmsWebAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SMSAPI.Entities.User", null)
+                    b.HasOne("SmsWebAPI.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -284,7 +272,7 @@ namespace SmsWebAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SMSAPI.Entities.User", null)
+                    b.HasOne("SmsWebAPI.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -293,13 +281,13 @@ namespace SmsWebAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("SMSAPI.Entities.Role", null)
+                    b.HasOne("SmsWebAPI.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SMSAPI.Entities.User", null)
+                    b.HasOne("SmsWebAPI.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -308,7 +296,7 @@ namespace SmsWebAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SMSAPI.Entities.User", null)
+                    b.HasOne("SmsWebAPI.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -5,7 +5,7 @@
 namespace SMSAPI.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class mig003 : Migration
+    public partial class AddVehicleCarPartOrderItem : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

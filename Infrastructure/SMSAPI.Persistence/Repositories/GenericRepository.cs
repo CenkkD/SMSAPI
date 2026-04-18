@@ -1,76 +1,91 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SMSAPI.Application.Dtos;
 using SMSAPI.Application.Repositories;
-using SMSAPI.Domain.Entities;
 using SMSAPI.Domain.Entities.Common;
 using SMSAPI.Persistence.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Net;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SMSAPI.Persistence.Repositories
 {
-	public class GenericRepository<T> : IRepository<T> where T : BaseEntity
-	{
-		private readonly StockDbContext _stockDbContext;
+    public class GenericRepository<T> : IRepository<T> where T : BaseEntity
+    {
+        private readonly StockDbContext _stockDbContext;
 
-		public GenericRepository(StockDbContext stockDbContext)
-		{
-			_stockDbContext = stockDbContext;
-		}
+        public GenericRepository(StockDbContext stockDbContext)
+        {
+            _stockDbContext = stockDbContext;
+        }
 
-		public DbSet<T> Table => _stockDbContext.Set<T>();
+        public DbSet<T> Table => _stockDbContext.Set<T>();
 
-		public IQueryable<T> GetAll()
-		=> _stockDbContext.Set<T>().AsNoTracking();
+        public IQueryable<T> GetAll()
+            => _stockDbContext.Set<T>().AsNoTracking();
 
-		public async Task<T> GetByIdAsync(string id)
-		=> await Table.AsNoTracking().FirstOrDefaultAsync(data=>data.Id.Contains(id));
+        public async Task<List<T>> GetAllAsync()
+            => await _stockDbContext.Set<T>().AsNoTracking().ToListAsync();
 
-		public async Task<T> GetSingleAsync(Expression<Func<T, bool>> entity)
-			=> await Table.AsNoTracking().FirstOrDefaultAsync(entity);
+        public async Task<PagedResult<T>> GetPagedAsync(int pageNumber, int pageSize)
+            => await GetPagedAsync(null, pageNumber, pageSize);
 
-		public IQueryable<T> GetWhere(Expression<Func<T, bool>> entity)
-		=> Table.AsNoTracking().Where(entity);
+        public async Task<PagedResult<T>> GetPagedAsync(Expression<Func<T, bool>> filter, int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+            if (pageSize > 100) pageSize = 100;
 
-		public async Task AddAsync(T entity)
-		{
-			await _stockDbContext.AddAsync(entity);
-			await _stockDbContext.SaveChangesAsync();			 
-		}
-		public async Task<bool> UpdateAsync(string id, T entity)
-		{		
-			var exitingproduct = await _stockDbContext.Products.FindAsync(id);		
-			if (id == null) throw new ArgumentNullException("id");
-			{
-				_stockDbContext.Entry(exitingproduct).CurrentValues.SetValues(entity);
-				await _stockDbContext.SaveChangesAsync();
-				return true;
-			}
-		}
-		public async Task<bool> DeletteIdAsync(string id)
-		{
-			var data = await GetByIdAsync(id);
-			
-			_stockDbContext.Set<T>().Remove(data);
-			await _stockDbContext.SaveChangesAsync();
-			return true;
-		}
+            var query = _stockDbContext.Set<T>().AsNoTracking();
+            if (filter != null) query = query.Where(filter);
 
-		
-	}
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
+            return new PagedResult<T>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
 
+        public async Task<T> GetByIdAsync(string id)
+            => await Table.AsNoTracking().FirstOrDefaultAsync(data => data.Id == id);
 
+        public async Task<T> GetSingleAsync(Expression<Func<T, bool>> entity)
+            => await Table.AsNoTracking().FirstOrDefaultAsync(entity);
 
+        public IQueryable<T> GetWhere(Expression<Func<T, bool>> entity)
+            => Table.AsNoTracking().Where(entity);
+
+        public async Task AddAsync(T entity)
+        {
+            await _stockDbContext.AddAsync(entity);
+            await _stockDbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateAsync(string id, T entity)
+        {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+            var existing = await Table.FindAsync(id);
+            if (existing == null) return false;
+            entity.Id = id;
+            entity.UpdatedDate = DateTime.Now;
+            _stockDbContext.Entry(existing).CurrentValues.SetValues(entity);
+            await _stockDbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeletteIdAsync(string id)
+        {
+            var data = await Table.FindAsync(id);
+            if (data == null) return false;
+            data.IsDeleted = true;
+            data.UpdatedDate = DateTime.Now;
+            await _stockDbContext.SaveChangesAsync();
+            return true;
+        }
+    }
 }
-

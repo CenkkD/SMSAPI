@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace SMSAPI.Persistence.Migrations
+namespace SmsWebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class _002 : Migration
+    public partial class mig10 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

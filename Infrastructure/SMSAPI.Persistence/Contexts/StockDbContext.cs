@@ -1,43 +1,56 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SMSAPI.Domain.Entities;
-using SMSAPI.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SMSAPI.Persistence.Contexts
 {
-	public class StockDbContext : DbContext
-	{
-		public StockDbContext(DbContextOptions<StockDbContext> options) : base(options)
-		{
-		}
+    public class StockDbContext : DbContext
+    {
+        public StockDbContext(DbContextOptions<StockDbContext> options) : base(options)
+        {
+        }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			modelBuilder.Entity<Product_Order>().HasKey(po => new
-			{
-				po.ProductId,
-				po.OrderId,
-			});
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Vehicle>().HasQueryFilter(v => !v.IsDeleted);
+            modelBuilder.Entity<CarPart>().HasQueryFilter(cp => !cp.IsDeleted);
+            modelBuilder.Entity<Order>().HasQueryFilter(o => !o.IsDeleted);
+            modelBuilder.Entity<OrderItem>().HasQueryFilter(oi => !oi.IsDeleted);
+            modelBuilder.Entity<Customer>().HasQueryFilter(c => !c.IsDeleted);
 
-			modelBuilder.Entity<Product_Order>().HasOne(po => po.Product).WithMany(po=>po.Product_Orders).HasForeignKey(po=>po.ProductId);
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
-			modelBuilder.Entity<Product_Order>().HasOne(po => po.Order).WithMany(po=>po.Product_Orders).HasForeignKey(po=>po.OrderId);
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Vehicle)
+                .WithMany(v => v.OrderItems)
+                .HasForeignKey(oi => oi.VehicleId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
-			base.OnModelCreating(modelBuilder);
-		}
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.CarPart)
+                .WithMany(cp => cp.OrderItems)
+                .HasForeignKey(oi => oi.CarPartId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Order)
+                .WithMany(o => o.OrderItems)
+                .HasForeignKey(oi => oi.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            base.OnModelCreating(modelBuilder);
+        }
 
-
-
-		public DbSet<Product> Products { get; set; }
-		public DbSet<Order> Orders { get; set; }
-		
-		public DbSet<Product_Order> Products_Orders { get; set; }
-	}
+        public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<CarPart> CarParts { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+    }
 }

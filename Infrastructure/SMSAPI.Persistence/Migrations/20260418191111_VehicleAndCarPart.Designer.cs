@@ -12,18 +12,67 @@ using SMSAPI.Persistence.Contexts;
 namespace SMSAPI.Persistence.Migrations
 {
     [DbContext(typeof(StockDbContext))]
-    [Migration("20241225211820_mig005")]
-    partial class mig005
+    [Migration("20260418191111_VehicleAndCarPart")]
+    partial class VehicleAndCarPart
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("SMSAPI.Domain.Entities.CarPart", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Brand")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompatibleModels")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOriginal")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PartName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PartNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Weight")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CarParts");
+                });
 
             modelBuilder.Entity("SMSAPI.Domain.Entities.Order", b =>
                 {
@@ -42,12 +91,59 @@ namespace SMSAPI.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("SMSAPI.Domain.Entities.Product", b =>
+            modelBuilder.Entity("SMSAPI.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CarPartId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VehicleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarPartId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("SMSAPI.Domain.Entities.Vehicle", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -85,6 +181,9 @@ namespace SMSAPI.Persistence.Migrations
                     b.Property<string>("Hundread2TwoHundread")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Kw")
                         .HasColumnType("nvarchar(max)");
 
@@ -100,8 +199,8 @@ namespace SMSAPI.Persistence.Migrations
                     b.Property<string>("PassengerCapacity")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
@@ -121,6 +220,9 @@ namespace SMSAPI.Persistence.Migrations
                     b.Property<string>("TurboType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Width")
                         .HasColumnType("nvarchar(max)");
 
@@ -129,57 +231,47 @@ namespace SMSAPI.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("SMSAPI.Domain.Entities.Product_Order", b =>
+            modelBuilder.Entity("SMSAPI.Domain.Entities.OrderItem", b =>
                 {
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(450)");
+                    b.HasOne("SMSAPI.Domain.Entities.CarPart", "CarPart")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("CarPartId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Property<string>("OrderId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductId", "OrderId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("Products_Orders");
-                });
-
-            modelBuilder.Entity("SMSAPI.Domain.Entities.Product_Order", b =>
-                {
                     b.HasOne("SMSAPI.Domain.Entities.Order", "Order")
-                        .WithMany("Product_Orders")
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SMSAPI.Domain.Entities.Product", "Product")
-                        .WithMany("Product_Orders")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("SMSAPI.Domain.Entities.Vehicle", "Vehicle")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CarPart");
 
                     b.Navigation("Order");
 
-                    b.Navigation("Product");
+                    b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("SMSAPI.Domain.Entities.CarPart", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("SMSAPI.Domain.Entities.Order", b =>
                 {
-                    b.Navigation("Product_Orders");
+                    b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("SMSAPI.Domain.Entities.Product", b =>
+            modelBuilder.Entity("SMSAPI.Domain.Entities.Vehicle", b =>
                 {
-                    b.Navigation("Product_Orders");
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

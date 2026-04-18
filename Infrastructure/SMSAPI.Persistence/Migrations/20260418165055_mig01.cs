@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SMSAPI.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class _001 : Migration
+    public partial class mig01 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,6 +36,25 @@ namespace SMSAPI.Persistence.Migrations
                     ModelYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<long>(type: "bigint", nullable: false),
+                    HorsePower = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Kw = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Torque = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TurboType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TractionSystem = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Transmission = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TopSpeed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Zero2Hundread = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Hundread2TwoHundread = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FuelType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FuelEffiency = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChassisMaterial = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CargoSpace = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Doors = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PassengerCapacity = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BuildQuality = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Length = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Width = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Height = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

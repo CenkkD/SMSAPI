@@ -12,15 +12,15 @@ using SMSAPI.Persistence.Contexts;
 namespace SMSAPI.Persistence.Migrations
 {
     [DbContext(typeof(StockDbContext))]
-    [Migration("20240914164200_002")]
-    partial class _002
+    [Migration("20260418165055_mig01")]
+    partial class mig01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -55,8 +55,41 @@ namespace SMSAPI.Persistence.Migrations
                     b.Property<string>("BrandName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("BuildQuality")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CargoSpace")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChassisMaterial")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Doors")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FuelEffiency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FuelType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Height")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HorsePower")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Hundread2TwoHundread")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Kw")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Length")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModelName")
                         .HasColumnType("nvarchar(max)");
@@ -64,11 +97,35 @@ namespace SMSAPI.Persistence.Migrations
                     b.Property<string>("ModelYear")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PassengerCapacity")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("Price")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
+
+                    b.Property<string>("TopSpeed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Torque")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TractionSystem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Transmission")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TurboType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Width")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Zero2Hundread")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

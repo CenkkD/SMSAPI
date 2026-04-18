@@ -35,12 +35,12 @@ namespace SmsWebAPI.JwtFeatures
 		{
 			var claims = new List<Claim>
 			{
-				new Claim(ClaimTypes.Name, user.UserName)
+				new Claim(ClaimTypes.NameIdentifier, user.Id),
+				new Claim(ClaimTypes.Name, user.UserName),
+				new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
 			};
 			foreach (var role in roles)
-			{
 				claims.Add(new Claim(ClaimTypes.Role, role));
-			}
 			return claims;
 		}
 		private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)

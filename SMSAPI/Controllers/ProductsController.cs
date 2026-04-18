@@ -1,117 +1,189 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SMSAPI.Application.Dtos;
 using SMSAPI.Application.Repositories;
 using SMSAPI.Domain.Entities;
-using System.Net;
 
 namespace SmsWebAPI.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class ProductsController : ControllerBase
-	{
-		private readonly IProductRepository _productRepository;
-		public ProductsController(IProductRepository productRepository)
-		{
-			_productRepository = productRepository;
-		}
-		[HttpPost("CreateProduct")]
-		public async Task<IActionResult> CreateProduct(ProductsCreateDto productCreateDto)
-		{
-			await _productRepository.AddAsync(new()
-			{
-				Id = Guid.NewGuid().ToString(),
-				BrandName = productCreateDto.BrandName,
-				ModelName = productCreateDto.ModelName,
-				ModelYear = productCreateDto.ModelYear,
-				CreatedDate = DateTime.Now,
-				Price = productCreateDto.Price,
-				Stock = productCreateDto.Stock,
-				HorsePower = productCreateDto.HorsePower,
-				Kw = productCreateDto.Kw,
-				Torque = productCreateDto.Torque,
-				TurboType = productCreateDto.TurboType,
-				TractionSystem = productCreateDto.TractionSystem,
-				Transmission = productCreateDto.Transmission,
-				TopSpeed = productCreateDto.TopSpeed,
-				Zero2Hundread = productCreateDto.Zero2Hundread,
-				Hundread2TwoHundread = productCreateDto.Hundread2TwoHundread,
-				FuelType = productCreateDto.FuelType,
-				FuelEffiency = productCreateDto.FuelEffiency,
-				ChassisMaterial = productCreateDto.ChassisMaterial,
-				CargoSpace = productCreateDto.CargoSpace,
-				Doors = productCreateDto.Doors,
-				PassengerCapacity = productCreateDto.PassengerCapacity,
-				BuildQuality = productCreateDto.BuildQuality,
-				Length = productCreateDto.Length,
-				Width = productCreateDto.Width,
-				Height = productCreateDto.Height,
-			});
+    [Route("api/vehicles")]
+    [ApiController]
+    [Authorize]
+    public class VehiclesController : ControllerBase
+    {
+        private readonly IVehicleRepository _vehicleRepository;
 
-			return StatusCode((int)HttpStatusCode.Created);
-		}
-		[HttpPost("DeleteProduct")]
-		public async Task<IActionResult> DeleteProduct(string id)
-		{
-			await _productRepository.DeletteIdAsync(id);
-			return Ok();
-		}
-		[HttpPut("UpdateProduct")]
-		public async Task<IActionResult> UpdateProduct(string id, ProductsUpdateDto productsUpdatedDto)
-		{
-			await _productRepository.UpdateAsync(id, new()
-			{
-				Id = id,
-				BrandName = productsUpdatedDto.BrandName,
-				ModelName = productsUpdatedDto.ModelName,
-				ModelYear = productsUpdatedDto.ModelYear,
-				Price = productsUpdatedDto.Price,
-				Stock = productsUpdatedDto.Stock,
-				HorsePower = productsUpdatedDto.HorsePower,
-				Kw = productsUpdatedDto.Kw,
-				Torque = productsUpdatedDto.Torque,
-				TurboType = productsUpdatedDto.TurboType,
-				TractionSystem = productsUpdatedDto.TractionSystem,
-				Transmission = productsUpdatedDto.Transmission,
-				TopSpeed = productsUpdatedDto.TopSpeed,
-				Zero2Hundread = productsUpdatedDto.Zero2Hundread,
-				Hundread2TwoHundread = productsUpdatedDto.Hundread2TwoHundread,
-				FuelType = productsUpdatedDto.FuelType,
-				FuelEffiency = productsUpdatedDto.FuelEffiency,
-				ChassisMaterial = productsUpdatedDto.ChassisMaterial,
-				CargoSpace = productsUpdatedDto.CargoSpace,
-				Doors = productsUpdatedDto.Doors,
-				PassengerCapacity = productsUpdatedDto.PassengerCapacity,
-				BuildQuality = productsUpdatedDto.BuildQuality,
-				Length = productsUpdatedDto.Length,
-				Width = productsUpdatedDto.Width,
-				Height = productsUpdatedDto.Height,
-				CreatedDate = DateTime.Now,
-			});
-			return StatusCode((int)HttpStatusCode.OK);
-		}
-		[HttpGet("GetAllProduct")]
-		public async Task<IActionResult> GetAllProduct()
-		{
+        public VehiclesController(IVehicleRepository vehicleRepository)
+        {
+            _vehicleRepository = vehicleRepository;
+        }
 
-			var products = _productRepository.GetAll();
+        [HttpPost]
+        [Authorize(Policy = "StockManagerOrAdmin")]
+        public async Task<IActionResult> CreateVehicle([FromBody] VehicleCreateDto dto)
+        {
+            if (dto is null) return BadRequest("Vehicle data is required.");
+            if (string.IsNullOrWhiteSpace(dto.BrandName)) return BadRequest("Brand name is required.");
+            if (string.IsNullOrWhiteSpace(dto.ModelName)) return BadRequest("Model name is required.");
+            if (string.IsNullOrWhiteSpace(dto.ModelYear)) return BadRequest("Model year is required.");
+            if (dto.Price <= 0) return BadRequest("Price must be greater than zero.");
+            if (dto.Stock < 0) return BadRequest("Stock cannot be negative.");
 
-			return Ok(products);
+            await _vehicleRepository.AddAsync(new Vehicle
+            {
+                Id = Guid.NewGuid().ToString(),
+                CreatedDate = DateTime.Now,
+                BrandName = dto.BrandName,
+                ModelName = dto.ModelName,
+                ModelYear = dto.ModelYear,
+                Price = dto.Price,
+                Stock = dto.Stock,
+                HorsePower = dto.HorsePower,
+                Kw = dto.Kw,
+                Torque = dto.Torque,
+                TurboType = dto.TurboType,
+                TractionSystem = dto.TractionSystem,
+                Transmission = dto.Transmission,
+                TopSpeed = dto.TopSpeed,
+                Zero2Hundread = dto.Zero2Hundread,
+                Hundread2TwoHundread = dto.Hundread2TwoHundread,
+                FuelType = dto.FuelType,
+                FuelEffiency = dto.FuelEffiency,
+                ChassisMaterial = dto.ChassisMaterial,
+                CargoSpace = dto.CargoSpace,
+                Doors = dto.Doors,
+                PassengerCapacity = dto.PassengerCapacity,
+                BuildQuality = dto.BuildQuality,
+                Length = dto.Length,
+                Width = dto.Width,
+                Height = dto.Height,
+            });
 
-		}
-		[HttpGet("GetByBrandName")]
-		public async Task<IActionResult> GetByBrandName(string name, ProductsGetDto productsGetDto)
-		{
+            return StatusCode(201);
+        }
 
-			var products = await _productRepository.GetWhere(p => p.BrandName.Equals(name));
-		
+        [HttpGet]
+        public async Task<IActionResult> GetAllVehicles(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? brand = null,
+            [FromQuery] string? fuelType = null,
+            [FromQuery] string? transmission = null,
+            [FromQuery] string? modelYear = null,
+            [FromQuery] decimal? minPrice = null,
+            [FromQuery] decimal? maxPrice = null)
+        {
+            var result = await _vehicleRepository.GetPagedAsync(
+                v => (!v.IsDeleted) &&
+                     (brand == null || v.BrandName!.ToLower().Contains(brand.ToLower())) &&
+                     (fuelType == null || v.FuelType == fuelType) &&
+                     (transmission == null || v.Transmission == transmission) &&
+                     (modelYear == null || v.ModelYear == modelYear) &&
+                     (minPrice == null || v.Price >= minPrice) &&
+                     (maxPrice == null || v.Price <= maxPrice),
+                pageNumber, pageSize);
 
-			return Ok(products);
+            return Ok(new PagedResult<VehicleResponseDto>
+            {
+                Items = result.Items.Select(MapToResponse).ToList(),
+                TotalCount = result.TotalCount,
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize
+            });
+        }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetVehicle(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return BadRequest("Vehicle id is required.");
+            var vehicle = await _vehicleRepository.GetByIdAsync(id);
+            if (vehicle is null) return NotFound($"Vehicle with id '{id}' not found.");
+            return Ok(MapToResponse(vehicle));
+        }
 
+        [HttpPut("{id}")]
+        [Authorize(Policy = "StockManagerOrAdmin")]
+        public async Task<IActionResult> UpdateVehicle(string id, [FromBody] VehicleUpdateDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return BadRequest("Vehicle id is required.");
+            if (dto is null) return BadRequest("Vehicle data is required.");
+            var existing = await _vehicleRepository.GetByIdAsync(id);
+            if (existing is null) return NotFound($"Vehicle with id '{id}' not found.");
+            if (dto.Price <= 0) return BadRequest("Price must be greater than zero.");
+            if (dto.Stock < 0) return BadRequest("Stock cannot be negative.");
 
+            await _vehicleRepository.UpdateAsync(id, new Vehicle
+            {
+                Id = id,
+                BrandName = dto.BrandName,
+                ModelName = dto.ModelName,
+                ModelYear = dto.ModelYear,
+                Price = dto.Price,
+                Stock = dto.Stock,
+                HorsePower = dto.HorsePower,
+                Kw = dto.Kw,
+                Torque = dto.Torque,
+                TurboType = dto.TurboType,
+                TractionSystem = dto.TractionSystem,
+                Transmission = dto.Transmission,
+                TopSpeed = dto.TopSpeed,
+                Zero2Hundread = dto.Zero2Hundread,
+                Hundread2TwoHundread = dto.Hundread2TwoHundread,
+                FuelType = dto.FuelType,
+                FuelEffiency = dto.FuelEffiency,
+                ChassisMaterial = dto.ChassisMaterial,
+                CargoSpace = dto.CargoSpace,
+                Doors = dto.Doors,
+                PassengerCapacity = dto.PassengerCapacity,
+                BuildQuality = dto.BuildQuality,
+                Length = dto.Length,
+                Width = dto.Width,
+                Height = dto.Height,
+                CreatedDate = existing.CreatedDate,
+            });
 
-		}
-	}
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "StockManagerOrAdmin")]
+        public async Task<IActionResult> DeleteVehicle(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return BadRequest("Vehicle id is required.");
+            var vehicle = await _vehicleRepository.GetByIdAsync(id);
+            if (vehicle is null) return NotFound($"Vehicle with id '{id}' not found.");
+            await _vehicleRepository.DeletteIdAsync(id);
+            return Ok();
+        }
+
+        private static VehicleResponseDto MapToResponse(Vehicle v) => new()
+        {
+            Id = v.Id,
+            BrandName = v.BrandName,
+            ModelName = v.ModelName,
+            ModelYear = v.ModelYear,
+            Price = v.Price,
+            Stock = v.Stock,
+            HorsePower = v.HorsePower,
+            Kw = v.Kw,
+            Torque = v.Torque,
+            TurboType = v.TurboType,
+            TractionSystem = v.TractionSystem,
+            Transmission = v.Transmission,
+            TopSpeed = v.TopSpeed,
+            Zero2Hundread = v.Zero2Hundread,
+            Hundread2TwoHundread = v.Hundread2TwoHundread,
+            FuelType = v.FuelType,
+            FuelEffiency = v.FuelEffiency,
+            ChassisMaterial = v.ChassisMaterial,
+            CargoSpace = v.CargoSpace,
+            Doors = v.Doors,
+            PassengerCapacity = v.PassengerCapacity,
+            BuildQuality = v.BuildQuality,
+            Length = v.Length,
+            Width = v.Width,
+            Height = v.Height,
+            CreatedDate = v.CreatedDate,
+        };
+    }
 }

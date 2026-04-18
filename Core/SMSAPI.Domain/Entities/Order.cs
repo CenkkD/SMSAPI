@@ -1,22 +1,15 @@
-﻿using SMSAPI.Domain.Entities.Common;
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SMSAPI.Domain.Entities.Common;
 
 namespace SMSAPI.Domain.Entities
 {
-	public class Order:BaseEntity	{
+    public class Order : BaseEntity
+    {
+        public string? Description { get; set; }
+        public string? CustomerId { get; set; }
+        public Customer? Customer { get; set; }
+        public string? CustomerName { get; set; }
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
-		public string? Description {  get; set; }
-		public Guid? CustomerId { get; set; }
-		public string? CustomerName { get; set; }
-
-		public ICollection<Product_Order> Product_Orders { get; set; }
-
-	}
+        public ICollection<OrderItem> OrderItems { get; set; }
+    }
 }

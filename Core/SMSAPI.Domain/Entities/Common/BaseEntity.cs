@@ -11,5 +11,7 @@ namespace SMSAPI.Domain.Entities.Common
 	{
 		public string? Id { get; set; }
 		public DateTime CreatedDate { get; set; }
+		public DateTime? UpdatedDate { get; set; }
+		public bool IsDeleted { get; set; } = false;
 	}
 }

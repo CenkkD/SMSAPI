@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using SMSAPI.Domain.Entities.Common;
+﻿using SMSAPI.Domain.Entities.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +13,7 @@ namespace SMSAPI.Application.Dtos
 		public string? ModelName { get; set; }
 		public string? ModelYear { get; set; }
 		public int Stock { get; set; }
-		[JsonProperty(PropertyName = "$Price")]
-		public long Price { get; set; }
+		public decimal Price { get; set; }
 		public string? HorsePower { get; set; }
 		public string? Kw { get; set; }
 		public string? Torque { get; set; }
